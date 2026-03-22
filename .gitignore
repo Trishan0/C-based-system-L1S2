@@ -4,6 +4,8 @@ output/
 *.exe
 *.out
 
+railway_system
+
 # OS junk
 .DS_Store
 Thumbs.db
