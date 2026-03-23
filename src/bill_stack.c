@@ -65,20 +65,26 @@ void peekLatestItem(void) {
 
 void displayCurrentBillStack(void) {
     if (isStackEmpty()) {
-        printf("Bill stack is empty.\n");
+        printf("\n  [!] Bill stack is empty.\n");
         return;
     }
 
-    printf("\n============= CURRENT BILL STACK =============\n");
-    printf("%-6s %-20s %-10s %-8s\n", "ID", "Name", "Price", "Qty");
-    printf("----------------------------------------------\n");
+    printf("\n");
+    printf("  +-------------------------------------------------------------------+\n");
+    printf("  |                      CURRENT BILL STACK TABLE                     |\n");
+    printf("  +------------+--------------------------+------------+--------------+\n");
+    printf("  | Product ID | Product Name             | Price      | Quantity     |\n");
+    printf("  +------------+--------------------------+------------+--------------+\n");
+
     for (int i = bill.top; i >= 0; i--) {
-        printf("%-6d %-20s %-10.2f %-8d\n",
+        printf("  | %-10d | %-24s | %-10.2f | %-12d |\n",
                bill.items[i].productId,
                bill.items[i].productName,
                bill.items[i].price,
                bill.items[i].qty);
     }
+
+    printf("  +------------+--------------------------+------------+--------------+\n");
 }
 
 void currentBillTotal(void) {

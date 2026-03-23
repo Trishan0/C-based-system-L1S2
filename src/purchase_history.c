@@ -105,38 +105,55 @@ void deletePurchaseRecord(void) {
 
 void traversePurchasesForward(void) {
     if (head == NULL) {
-        printf("No purchase records available.\n");
+        printf("\n  [!] No purchase records available.\n");
         return;
     }
 
-    printf("\n============= PURCHASE HISTORY (FORWARD) =============\n");
-    printf("%-8s %-10s %-20s %-10s\n", "RecID", "CustID", "Name", "Amount");
-    printf("------------------------------------------------------\n");
+    printf("\n");
+    printf("  +-----------------------------------------------------------------------------------+\n");
+    printf("  |                    CUSTOMER PURCHASE HISTORY TABLE (FORWARD)                      |\n");
+    printf("  +----------+------------+--------------------------+-------------------------------+\n");
+    printf("  | RecordID | CustomerID | Customer Name            | Amount                        |\n");
+    printf("  +----------+------------+--------------------------+-------------------------------+\n");
+
     Purchase* cur = head;
     while (cur != NULL) {
-        printf("%-8d %-10d %-20s %-10.2f\n",
-               cur->recordId, cur->customerId, cur->customerName, cur->amount);
+        printf("  | %-8d | %-10d | %-24s | %-29.2f |\n",
+               cur->recordId,
+               cur->customerId,
+               cur->customerName,
+               cur->amount);
         cur = cur->next;
     }
+
+    printf("  +----------+------------+--------------------------+-------------------------------+\n");
 }
 
 void traversePurchasesBackward(void) {
     if (tail == NULL) {
-        printf("No purchase records available.\n");
+        printf("\n  [!] No purchase records available.\n");
         return;
     }
 
-    printf("\n============= PURCHASE HISTORY (BACKWARD) =============\n");
-    printf("%-8s %-10s %-20s %-10s\n", "RecID", "CustID", "Name", "Amount");
-    printf("-------------------------------------------------------\n");
+    printf("\n");
+    printf("  +-----------------------------------------------------------------------------------+\n");
+    printf("  |                   CUSTOMER PURCHASE HISTORY TABLE (BACKWARD)                      |\n");
+    printf("  +----------+------------+--------------------------+-------------------------------+\n");
+    printf("  | RecordID | CustomerID | Customer Name            | Amount                        |\n");
+    printf("  +----------+------------+--------------------------+-------------------------------+\n");
+
     Purchase* cur = tail;
     while (cur != NULL) {
-        printf("%-8d %-10d %-20s %-10.2f\n",
-               cur->recordId, cur->customerId, cur->customerName, cur->amount);
+        printf("  | %-8d | %-10d | %-24s | %-29.2f |\n",
+               cur->recordId,
+               cur->customerId,
+               cur->customerName,
+               cur->amount);
         cur = cur->prev;
     }
-}
 
+    printf("  +----------+------------+--------------------------+-------------------------------+\n");
+}
 void totalPurchasesByCustomer(void) {
     int customerId;
     float total = 0.0f;

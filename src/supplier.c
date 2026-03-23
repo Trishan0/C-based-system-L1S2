@@ -100,18 +100,28 @@ void deleteSupplier(void) {
 
 void displaySuppliers(void) {
     if (head == NULL) {
-        printf("No suppliers available.\n");
+        printf("\n  [!] No suppliers available.\n");
         return;
     }
 
-    printf("\n================ SUPPLIER LIST ================\n");
-    printf("%-6s %-20s %-15s\n", "ID", "Name", "Phone");
-    printf("-----------------------------------------------\n");
+    printf("\n");
+    printf("  +-------------------------------------------------------------------+\n");
+    printf("  |                      SUPPLIER MANAGEMENT TABLE                    |\n");
+    printf("  +----------+--------------------------+------------------------------+\n");
+    printf("  | Supplier | Name                     | Phone                        |\n");
+    printf("  | ID       |                          |                              |\n");
+    printf("  +----------+--------------------------+------------------------------+\n");
+
     Supplier* cur = head;
     while (cur != NULL) {
-        printf("%-6d %-20s %-15s\n", cur->id, cur->name, cur->phone);
+        printf("  | %-8d | %-24s | %-28s |\n",
+               cur->id,
+               cur->name,
+               cur->phone);
         cur = cur->next;
     }
+
+    printf("  +----------+--------------------------+------------------------------+\n");
 }
 
 void countSuppliers(void) {

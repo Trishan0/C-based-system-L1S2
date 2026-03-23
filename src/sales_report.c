@@ -87,16 +87,24 @@ void deleteSalesRecord(void) {
 
 void displaySalesRecords(void) {
     if (salesCount == 0) {
-        printf("No sales records available.\n");
+        printf("\n  [!] No sales records available.\n");
         return;
     }
 
-    printf("\n================ SALES RECORDS ================\n");
-    printf("%-10s %-15s\n", "Day", "Amount");
-    printf("--------------------------------------------\n");
+    printf("\n");
+    printf("  +---------------------------------------------------+\n");
+    printf("  |                  SALES REPORT TABLE               |\n");
+    printf("  +------------+--------------------------------------+\n");
+    printf("  | Day Number | Sales Amount                         |\n");
+    printf("  +------------+--------------------------------------+\n");
+
     for (int i = 0; i < salesCount; i++) {
-        printf("%-10d %-15.2f\n", sales[i].day, sales[i].amount);
+        printf("  | %-10d | %-36.2f |\n",
+               sales[i].day,
+               sales[i].amount);
     }
+
+    printf("  +------------+--------------------------------------+\n");
 }
 
 void bubbleSortSalesByAmount(void) {
