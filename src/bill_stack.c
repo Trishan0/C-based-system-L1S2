@@ -111,10 +111,10 @@ void currentBillTotal(void) {
 void billStackMenu(void) {
     int choice;
     do {
-        printf("\n=== Undo Last Item in Current Bill (Stack) ===\n");
-        printf("1. Push scanned item\n");
-        printf("2. Pop last item\n");
-        printf("3. Peek latest item\n");
+        printf("\n===  Current Bill Operations (Stack) ===\n");
+        printf("1. Add scanned item  (Push) \n");
+        printf("2. Remove last item (Pop)\n");
+        printf("3. View latest item (Peek)\n");
         printf("4. Display current bill stack\n");
         printf("5. Current bill total\n");
         printf("0. Back\n");
