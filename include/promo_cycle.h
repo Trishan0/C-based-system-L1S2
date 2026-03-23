@@ -4,6 +4,7 @@
 void promoCycleMenu(void);
 void addPromo(void);
 void displayNextPromo(void);
+void displayAllPromos(void);
 void searchPromo(void);
 void updatePromo(void);
 void deletePromo(void);

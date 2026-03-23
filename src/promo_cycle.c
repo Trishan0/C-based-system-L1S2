@@ -73,6 +73,30 @@ void displayNextPromo(void) {
     printf("Next promo: ID=%d | Title=%s\n", current->id, current->title);
 }
 
+void displayAllPromos(void) {
+    if (last == NULL) {
+        printf("\n  [!] No promos available.\n");
+        return;
+    }
+
+    printf("\n");
+    printf("  +-------------------------------------------------------------------+\n");
+    printf("  |                    PROMOTIONAL BANNER TABLE                       |\n");
+    printf("  +----------+--------------------------------------------------------+\n");
+    printf("  | Promo ID | Title                                                  |\n");
+    printf("  +----------+--------------------------------------------------------+\n");
+
+    Promo* cur = last->next;
+    do {
+        printf("  | %-8d | %-54s |\n",
+               cur->id,
+               cur->title);
+        cur = cur->next;
+    } while (cur != last->next);
+
+    printf("  +----------+--------------------------------------------------------+\n");
+}
+
 void searchPromo(void) {
     int id;
     printf("Enter promo id to search: ");
@@ -156,6 +180,7 @@ void promoCycleMenu(void) {
         printf("4. Update promo\n");
         printf("5. Delete promo\n");
         printf("6. Count active promos\n");
+        printf("7. Display all promos\n");
         printf("0. Back\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
@@ -167,6 +192,7 @@ void promoCycleMenu(void) {
             case 4: updatePromo(); break;
             case 5: deletePromo(); break;
             case 6: countActivePromos(); break;
+            case 7: displayAllPromos(); break;
             case 0: break;
             default: printf("Invalid choice.\n");
         }
