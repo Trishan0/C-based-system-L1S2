@@ -36,8 +36,8 @@ void enqueueRestockRequest(void) {
     printf("Enter requested quantity: ");
     scanf("%d", &r.requestedQty);
 
-    RestockQueue.rear++;
-    RestockQueue.items[RestockQueue.rear] = r;
+    restockQueue.rear++;
+    restockQueue.items[restockQueue.rear] = r;
     printf("Restock request added successfully.\n");
 }
 
@@ -47,7 +47,7 @@ void dequeueRestockRequest(void) {
         return;
     }
 
-    RestockRequest r = RestockQueue.items[RestockQueue.front++];
+    RestockRequest r = restockQueue.items[restockQueue.front++];
     printf("Processed restock request: ID=%d | Name=%s | Qty=%d\n",
            r.productId, r.productName, r.requestedQty);
 }
@@ -58,7 +58,7 @@ void frontRestockRequest(void) {
         return;
     }
 
-    RestockRequest r = queueData.items[queueData.front];
+    RestockRequest r = restockQueue.items[restockQueue.front];
 
     printf("\n");
     printf("  +-------------------------------------------------------------+\n");
@@ -83,11 +83,11 @@ void displayRestockRequests(void) {
     printf("  | Product ID | Product Name             | Requested Quantity        |\n");
     printf("  +------------+--------------------------+---------------------------+\n");
 
-    for (int i = queueData.front; i <= queueData.rear; i++) {
+    for (int i = restockQueue.front; i <= restockQueue.rear; i++) {
         printf("  | %-10d | %-24s | %-25d |\n",
-               queueData.items[i].productId,
-               queueData.items[i].productName,
-               queueData.items[i].requestedQty);
+               restockQueue.items[i].productId,
+               restockQueue.items[i].productName,
+               restockQueue.items[i].requestedQty);
     }
 
     printf("  +------------+--------------------------+---------------------------+\n");
@@ -103,15 +103,15 @@ void searchRestockRequest(void) {
     printf("Enter product id to search: ");
     scanf("%d", &productId);
 
-    for (int i = queueData.front; i <= queueData.rear; i++) {
-        if (queueData.items[i].productId == productId) {
+    for (int i = restockQueue.front; i <= restockQueue.rear; i++) {
+        if (restockQueue.items[i].productId == productId) {
             printf("\n");
             printf("  +-------------------------------------------------------------+\n");
             printf("  |                RESTOCK REQUEST SEARCH RESULT                |\n");
             printf("  +--------------+----------------------------------------------+\n");
-            printf("  | Product ID   | %-44d |\n", queueData.items[i].productId);
-            printf("  | Product Name | %-44s |\n", queueData.items[i].productName);
-            printf("  | Request Qty  | %-44d |\n", queueData.items[i].requestedQty);
+            printf("  | Product ID   | %-44d |\n", restockQueue.items[i].productId);
+            printf("  | Product Name | %-44s |\n", restockQueue.items[i].productName);
+            printf("  | Request Qty  | %-44d |\n", restockQueue.items[i].requestedQty);
             printf("  +--------------+----------------------------------------------+\n");
             return;
         }
@@ -125,7 +125,7 @@ void countPendingRestockRequests(void) {
         return;
     }
 
-    printf("Pending restock requests: %d\n", RestockQueue.rear - RestockQueue.front + 1);
+    printf("Pending restock requests: %d\n", restockQueue.rear - restockQueue.front + 1);
 }
 
 void totalRequestedQuantity(void) {
@@ -135,7 +135,7 @@ void totalRequestedQuantity(void) {
     }
 
     int total = 0;
-    for (int i = RestockQueue.front; i <= RestockQueue.rear; i++) {
+    for (int i = restockQueue.front; i <= restockQueue.rear; i++) {
         total += restockQueue.items[i].requestedQty;
     }
     printf("Total requested quantity: %d\n", total);
