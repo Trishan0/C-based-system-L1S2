@@ -107,18 +107,27 @@ void deleteProduct(void) {
 
 void displayProducts(void) {
     if (productCount == 0) {
-        printf("No products available.\n");
+        printf("\n  [!] No products available.\n");
         return;
     }
 
-    printf("\n================ PRODUCT INVENTORY ================\n");
-    printf("%-6s %-20s %-12s %-8s\n", "ID", "Name", "Price", "Qty");
-    printf("---------------------------------------------------\n");
+    printf("\n");
+    printf("  +-------------------------------------------------------------------+\n");
+    printf("  |                      PRODUCT INVENTORY TABLE                      |\n");
+    printf("  +----------+--------------------------+------------+----------------+\n");
+    printf("  | Product  | Name                     | Price      | Quantity       |\n");
+    printf("  | ID       |                          |            |                |\n");
+    printf("  +----------+--------------------------+------------+----------------+\n");
+
     for (int i = 0; i < productCount; i++) {
-        printf("%-6d %-20s %-12.2f %-8d\n",
-               products[i].id, products[i].name,
-               products[i].price, products[i].quantity);
+        printf("  | %-8d | %-24s | %-10.2f | %-14d |\n",
+               products[i].id,
+               products[i].name,
+               products[i].price,
+               products[i].quantity);
     }
+
+    printf("  +----------+--------------------------+------------+----------------+\n");
 }
 
 void selectionSortProductsByPrice(void) {

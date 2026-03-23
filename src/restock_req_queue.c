@@ -65,19 +65,25 @@ void frontRestockRequest(void) {
 
 void displayRestockRequests(void) {
     if (isQueueEmpty()) {
-        printf("No pending restock requests.\n");
+        printf("\n  [!] No pending restock requests.\n");
         return;
     }
 
-    printf("\n=========== RESTOCK REQUEST QUEUE ===========\n");
-    printf("%-10s %-20s %-12s\n", "ProdID", "Product Name", "Req Qty");
-    printf("---------------------------------------------\n");
-    for (int i = RestockQueue.front; i <= RestockQueue.rear; i++) {
-        printf("%-10d %-20s %-12d\n",
-               restockQueue.items[i].productId,
-               restockQueue.items[i].productName,
-               restockQueue.items[i].requestedQty);
+    printf("\n");
+    printf("  +-------------------------------------------------------------------+\n");
+    printf("  |                    RESTOCK REQUEST QUEUE TABLE                    |\n");
+    printf("  +------------+--------------------------+---------------------------+\n");
+    printf("  | Product ID | Product Name             | Requested Quantity        |\n");
+    printf("  +------------+--------------------------+---------------------------+\n");
+
+    for (int i = queueData.front; i <= queueData.rear; i++) {
+        printf("  | %-10d | %-24s | %-25d |\n",
+               queueData.items[i].productId,
+               queueData.items[i].productName,
+               queueData.items[i].requestedQty);
     }
+
+    printf("  +------------+--------------------------+---------------------------+\n");
 }
 
 void searchRestockRequest(void) {
