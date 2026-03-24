@@ -3,6 +3,7 @@
 #include <string.h>
 #include "types.h"
 #include "purchase_history.h"
+#include "input_utils.h"
 
 static Purchase* head = NULL;
 static Purchase* tail = NULL;
@@ -23,8 +24,10 @@ void addPurchaseRecord(void) {
         return;
     }
 
-    printf("Enter record id: ");
-    scanf("%d", &node->recordId);
+    if (!readPositiveInt("Enter record id: ", &node->recordId)) {
+        free(node);
+        return;
+    }
 
     if (findPurchaseByRecordId(node->recordId) != NULL) {
         printf("Record ID already exists.\n");
@@ -32,12 +35,18 @@ void addPurchaseRecord(void) {
         return;
     }
 
-    printf("Enter customer id: ");
-    scanf("%d", &node->customerId);
-    printf("Enter customer name: ");
-    scanf(" %49[^\n]", node->customerName);
-    printf("Enter purchase amount: ");
-    scanf("%f", &node->amount);
+    if (!readPositiveInt("Enter customer id: ", &node->customerId)) {
+        free(node);
+        return;
+    }
+    if (!readLine("Enter customer name: ", node->customerName, sizeof(node->customerName))) {
+        free(node);
+        return;
+    }
+    if (!readNonNegativeFloat("Enter purchase amount: ", &node->amount)) {
+        free(node);
+        return;
+    }
 
     node->prev = tail;
     node->next = NULL;
@@ -51,8 +60,7 @@ void addPurchaseRecord(void) {
 
 void searchPurchaseRecord(void) {
     int recordId;
-    printf("Enter record id to search: ");
-    scanf("%d", &recordId);
+    if (!readPositiveInt("Enter record id to search: ", &recordId)) return;
 
     Purchase* p = findPurchaseByRecordId(recordId);
     if (p == NULL) {
@@ -73,8 +81,7 @@ void searchPurchaseRecord(void) {
 
 void updatePurchaseRecord(void) {
     int recordId;
-    printf("Enter record id to update: ");
-    scanf("%d", &recordId);
+    if (!readPositiveInt("Enter record id to update: ", &recordId)) return;
 
     Purchase* p = findPurchaseByRecordId(recordId);
     if (p == NULL) {
@@ -82,17 +89,14 @@ void updatePurchaseRecord(void) {
         return;
     }
 
-    printf("Enter new customer name: ");
-    scanf(" %49[^\n]", p->customerName);
-    printf("Enter new amount: ");
-    scanf("%f", &p->amount);
+    if (!readLine("Enter new customer name: ", p->customerName, sizeof(p->customerName))) return;
+    if (!readNonNegativeFloat("Enter new amount: ", &p->amount)) return;
     printf("Purchase record updated successfully.\n");
 }
 
 void deletePurchaseRecord(void) {
     int recordId;
-    printf("Enter record id to delete: ");
-    scanf("%d", &recordId);
+    if (!readPositiveInt("Enter record id to delete: ", &recordId)) return;
 
     Purchase* node = findPurchaseByRecordId(recordId);
     if (node == NULL) {
@@ -166,8 +170,7 @@ void totalPurchasesByCustomer(void) {
     float total = 0.0f;
     int found = 0;
 
-    printf("Enter customer id: ");
-    scanf("%d", &customerId);
+    if (!readPositiveInt("Enter customer id: ", &customerId)) return;
 
     Purchase* cur = head;
     while (cur != NULL) {
@@ -187,7 +190,7 @@ void totalPurchasesByCustomer(void) {
 }
 
 void purchaseHistoryMenu(void) {
-    int choice;
+    int choice = -1;
     do {
         printf("\n=== Customer Purchase History (DLL) ===\n");
         printf("1. Add purchase record\n");
@@ -198,8 +201,7 @@ void purchaseHistoryMenu(void) {
         printf("6. Traverse backward\n");
         printf("7. Total purchases by customer\n");
         printf("0. Back\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (!readInt("Enter choice: ", &choice)) continue;
 
         switch (choice) {
             case 1: addPurchaseRecord(); break;
@@ -220,7 +222,8 @@ static void preloadRecord(int recordId, int customerId, const char* name, float 
     if (!node) return;
     node->recordId = recordId;
     node->customerId = customerId;
-    strcpy(node->customerName, name);
+    strncpy(node->customerName, name, sizeof(node->customerName) - 1);
+    node->customerName[sizeof(node->customerName) - 1] = '\0';
     node->amount = amount;
     node->prev = tail;
     node->next = NULL;

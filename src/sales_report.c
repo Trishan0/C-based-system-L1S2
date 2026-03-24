@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "types.h"
 #include "sales_report.h"
+#include "input_utils.h"
 
 static SaleRecord sales[MAX_SALES];
 static int salesCount = 0;
@@ -20,10 +21,8 @@ void addSalesRecord(void) {
         return;
     }
 
-    printf("Enter day number: ");
-    scanf("%d", &sales[salesCount].day);
-    printf("Enter sales amount: ");
-    scanf("%f", &sales[salesCount].amount);
+    if (!readPositiveInt("Enter day number: ", &sales[salesCount].day)) return;
+    if (!readNonNegativeFloat("Enter sales amount: ", &sales[salesCount].amount)) return;
     salesCount++;
 
     printf("Sales record added successfully.\n");
@@ -38,8 +37,7 @@ static int searchSalesIndexByDay(int day) {
 
 void searchSalesRecord(void) {
     int day;
-    printf("Enter day number to search: ");
-    scanf("%d", &day);
+    if (!readPositiveInt("Enter day number to search: ", &day)) return;
 
     int index = searchSalesIndexByDay(day);
     if (index == -1) {
@@ -58,8 +56,7 @@ void searchSalesRecord(void) {
 
 void updateSalesRecord(void) {
     int day;
-    printf("Enter day number to update: ");
-    scanf("%d", &day);
+    if (!readPositiveInt("Enter day number to update: ", &day)) return;
 
     int index = searchSalesIndexByDay(day);
     if (index == -1) {
@@ -67,15 +64,13 @@ void updateSalesRecord(void) {
         return;
     }
 
-    printf("Enter new sales amount: ");
-    scanf("%f", &sales[index].amount);
+    if (!readNonNegativeFloat("Enter new sales amount: ", &sales[index].amount)) return;
     printf("Sales record updated successfully.\n");
 }
 
 void deleteSalesRecord(void) {
     int day;
-    printf("Enter day number to delete: ");
-    scanf("%d", &day);
+    if (!readPositiveInt("Enter day number to delete: ", &day)) return;
 
     int index = searchSalesIndexByDay(day);
     if (index == -1) {
@@ -183,7 +178,7 @@ void highestSaleDay(void) {
     printf("  +--------------+----------------------------------------------+\n");
 }
 void salesReportMenu(void) {
-    int choice;
+    int choice = -1;
     do {
         printf("\n=== Sales Reports (Array) ===\n");
         printf("1. Add sales record\n");
@@ -196,8 +191,7 @@ void salesReportMenu(void) {
         printf("8. Average sales\n");
         printf("9. Highest sale day\n");
         printf("0. Back\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (!readInt("Enter choice: ", &choice)) continue;
 
         switch (choice) {
             case 1: addSalesRecord(); break;

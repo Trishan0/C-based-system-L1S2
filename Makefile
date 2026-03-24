@@ -8,6 +8,7 @@ SRCDIR  = src
 INCDIR  = include
 
 SRCS = main.c \
+       $(SRCDIR)/input_utils.c \
        $(SRCDIR)/product.c \
        $(SRCDIR)/supplier.c \
        $(SRCDIR)/purchase_history.c \

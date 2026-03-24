@@ -6,6 +6,7 @@
 #include "bill_stack.h"
 #include "promo_cycle.h"
 #include "sales_report.h"
+#include "input_utils.h"
 
 static void showDemoGuide(void) {
     printf("\n================ DEMO GUIDE ================\n");
@@ -26,7 +27,7 @@ static void showDemoGuide(void) {
 }
 
 int main(void) {
-    int choice;
+    int choice = -1;
 
     initProducts();
     initQueue();
@@ -47,8 +48,9 @@ int main(void) {
         printf("7. Sales Reports (Array)\n");
         printf("8. Show demo guide\n");
         printf("0. Exit\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (!readInt("Enter choice: ", &choice)) {
+            continue;
+        }
 
         switch (choice) {
             case 1: productMenu(); break;

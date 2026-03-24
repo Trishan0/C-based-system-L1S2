@@ -2,6 +2,7 @@
 #include <string.h>
 #include "types.h"
 #include "bill_stack.h"
+#include "input_utils.h"
 
 static BillStack bill;
 
@@ -27,14 +28,10 @@ void pushScannedItem(void) {
     }
 
     BillItem item;
-    printf("Enter product id: ");
-    scanf("%d", &item.productId);
-    printf("Enter product name: ");
-    scanf(" %49[^\n]", item.productName);
-    printf("Enter price: ");
-    scanf("%f", &item.price);
-    printf("Enter quantity: ");
-    scanf("%d", &item.qty);
+    if (!readPositiveInt("Enter product id: ", &item.productId)) return;
+    if (!readLine("Enter product name: ", item.productName, sizeof(item.productName))) return;
+    if (!readNonNegativeFloat("Enter price: ", &item.price)) return;
+    if (!readPositiveInt("Enter quantity: ", &item.qty)) return;
 
     bill.top++;
     bill.items[bill.top] = item;
@@ -109,7 +106,7 @@ void currentBillTotal(void) {
     printf("  +--------------+----------------------------------------------+\n");
 }
 void billStackMenu(void) {
-    int choice;
+    int choice = -1;
     do {
         printf("\n===  Current Bill Operations (Stack) ===\n");
         printf("1. Add scanned item  (Push) \n");
@@ -118,8 +115,7 @@ void billStackMenu(void) {
         printf("4. Display current bill stack\n");
         printf("5. Current bill total\n");
         printf("0. Back\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (!readInt("Enter choice: ", &choice)) continue;
 
         switch (choice) {
             case 1: pushScannedItem(); break;

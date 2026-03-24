@@ -3,6 +3,7 @@
 #include <string.h>
 #include "types.h"
 #include "promo_cycle.h"
+#include "input_utils.h"
 
 static Promo* last = NULL;
 static Promo* current = NULL;
@@ -36,8 +37,10 @@ void addPromo(void) {
         return;
     }
 
-    printf("Enter promo id: ");
-    scanf("%d", &node->id);
+    if (!readPositiveInt("Enter promo id: ", &node->id)) {
+        free(node);
+        return;
+    }
 
     if (findPromoById(node->id, NULL) != NULL) {
         printf("Promo with this ID already exists.\n");
@@ -45,8 +48,10 @@ void addPromo(void) {
         return;
     }
 
-    printf("Enter promo title: ");
-    scanf(" %99[^\n]", node->title);
+    if (!readLine("Enter promo title: ", node->title, sizeof(node->title))) {
+        free(node);
+        return;
+    }
 
     if (last == NULL) {
         last = node;
@@ -108,8 +113,7 @@ void displayAllPromos(void) {
 
 void searchPromo(void) {
     int id;
-    printf("Enter promo id to search: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter promo id to search: ", &id)) return;
 
     Promo* promo = findPromoById(id, NULL);
     if (promo == NULL) {
@@ -128,8 +132,7 @@ void searchPromo(void) {
 
 void updatePromo(void) {
     int id;
-    printf("Enter promo id to update: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter promo id to update: ", &id)) return;
 
     Promo* promo = findPromoById(id, NULL);
     if (promo == NULL) {
@@ -137,15 +140,13 @@ void updatePromo(void) {
         return;
     }
 
-    printf("Enter new promo title: ");
-    scanf(" %99[^\n]", promo->title);
+    if (!readLine("Enter new promo title: ", promo->title, sizeof(promo->title))) return;
     printf("Promo updated successfully.\n");
 }
 
 void deletePromo(void) {
     int id;
-    printf("Enter promo id to delete: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter promo id to delete: ", &id)) return;
 
     Promo* prev = NULL;
     Promo* node = findPromoById(id, &prev);
@@ -186,7 +187,7 @@ void countActivePromos(void) {
 }
 
 void promoCycleMenu(void) {
-    int choice;
+    int choice = -1;
     do {
         printf("\n=== Promotional Banner Rotation (CLL) ===\n");
         printf("1. Add promo\n");
@@ -197,8 +198,7 @@ void promoCycleMenu(void) {
         printf("6. Count active promos\n");
         printf("7. Display all promos\n");
         printf("0. Back\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (!readInt("Enter choice: ", &choice)) continue;
 
         switch (choice) {
             case 1: addPromo(); break;
@@ -218,7 +218,8 @@ static void preloadPromo(int id, const char* title) {
     Promo* node = (Promo*)malloc(sizeof(Promo));
     if (!node) return;
     node->id = id;
-    strcpy(node->title, title);
+    strncpy(node->title, title, sizeof(node->title) - 1);
+    node->title[sizeof(node->title) - 1] = '\0';
     if (last == NULL) {
         last = node;
         node->next = node;

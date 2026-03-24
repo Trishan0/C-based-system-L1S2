@@ -3,6 +3,7 @@
 #include <string.h>
 #include "types.h"
 #include "supplier.h"
+#include "input_utils.h"
 
 static Supplier* head = NULL;
 
@@ -22,8 +23,10 @@ void addSupplier(void) {
         return;
     }
 
-    printf("Enter supplier id: ");
-    scanf("%d", &node->id);
+    if (!readPositiveInt("Enter supplier id: ", &node->id)) {
+        free(node);
+        return;
+    }
 
     if (findSupplierById(node->id) != NULL) {
         printf("Supplier with this ID already exists.\n");
@@ -31,10 +34,14 @@ void addSupplier(void) {
         return;
     }
 
-    printf("Enter supplier name: ");
-    scanf(" %49[^\n]", node->name);
-    printf("Enter supplier phone: ");
-    scanf(" %19s", node->phone);
+    if (!readLine("Enter supplier name: ", node->name, sizeof(node->name))) {
+        free(node);
+        return;
+    }
+    if (!readLine("Enter supplier phone: ", node->phone, sizeof(node->phone))) {
+        free(node);
+        return;
+    }
 
     node->next = head;
     head = node;
@@ -43,8 +50,7 @@ void addSupplier(void) {
 
 void searchSupplier(void) {
     int id;
-    printf("Enter supplier id to search: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter supplier id to search: ", &id)) return;
 
     Supplier* s = findSupplierById(id);
     if (s == NULL) {
@@ -64,8 +70,7 @@ void searchSupplier(void) {
 
 void updateSupplier(void) {
     int id;
-    printf("Enter supplier id to update: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter supplier id to update: ", &id)) return;
 
     Supplier* s = findSupplierById(id);
     if (s == NULL) {
@@ -73,17 +78,14 @@ void updateSupplier(void) {
         return;
     }
 
-    printf("Enter new supplier name: ");
-    scanf(" %49[^\n]", s->name);
-    printf("Enter new supplier phone: ");
-    scanf(" %19s", s->phone);
+    if (!readLine("Enter new supplier name: ", s->name, sizeof(s->name))) return;
+    if (!readLine("Enter new supplier phone: ", s->phone, sizeof(s->phone))) return;
     printf("Supplier updated successfully.\n");
 }
 
 void deleteSupplier(void) {
     int id;
-    printf("Enter supplier id to delete: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter supplier id to delete: ", &id)) return;
 
     Supplier* cur = head;
     Supplier* prev = NULL;
@@ -142,7 +144,7 @@ void countSuppliers(void) {
 }
 
 void supplierMenu(void) {
-    int choice;
+    int choice = -1;
     do {
         printf("\n=== Supplier Management (SLL) ===\n");
         printf("1. Add supplier\n");
@@ -152,8 +154,7 @@ void supplierMenu(void) {
         printf("5. Display suppliers\n");
         printf("6. Count suppliers\n");
         printf("0. Back\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (!readInt("Enter choice: ", &choice)) continue;
 
         switch (choice) {
             case 1: addSupplier(); break;
@@ -172,8 +173,10 @@ static void preloadOne(int id, const char* name, const char* phone) {
     Supplier* node = (Supplier*)malloc(sizeof(Supplier));
     if (!node) return;
     node->id = id;
-    strcpy(node->name, name);
-    strcpy(node->phone, phone);
+    strncpy(node->name, name, sizeof(node->name) - 1);
+    node->name[sizeof(node->name) - 1] = '\0';
+    strncpy(node->phone, phone, sizeof(node->phone) - 1);
+    node->phone[sizeof(node->phone) - 1] = '\0';
     node->next = head;
     head = node;
 }

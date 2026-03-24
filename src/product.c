@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "product.h"
+#include "input_utils.h"
 
 static Product products[MAX_PRODUCTS];
 static int productCount = 0;
@@ -22,20 +23,16 @@ void addProduct(void) {
     }
 
     Product p;
-    printf("Enter product id: ");
-    scanf("%d", &p.id);
+    if (!readPositiveInt("Enter product id: ", &p.id)) return;
 
     if (searchProductIndexById(p.id) != -1) {
         printf("Product with this ID already exists.\n");
         return;
     }
 
-    printf("Enter product name: ");
-    scanf(" %49[^\n]", p.name);
-    printf("Enter price: ");
-    scanf("%f", &p.price);
-    printf("Enter quantity: ");
-    scanf("%d", &p.quantity);
+    if (!readLine("Enter product name: ", p.name, sizeof(p.name))) return;
+    if (!readNonNegativeFloat("Enter price: ", &p.price)) return;
+    if (!readNonNegativeInt("Enter quantity: ", &p.quantity)) return;
 
     products[productCount++] = p;
     printf("Product added successfully.\n");
@@ -52,8 +49,7 @@ int searchProductIndexById(int id) {
 
 void searchProduct(void) {
     int id;
-    printf("Enter product id to search: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter product id to search: ", &id)) return;
 
     int index = searchProductIndexById(id);
     if (index == -1) {
@@ -74,8 +70,7 @@ void searchProduct(void) {
 
 void updateProduct(void) {
     int id;
-    printf("Enter product id to update: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter product id to update: ", &id)) return;
 
     int index = searchProductIndexById(id);
     if (index == -1) {
@@ -84,17 +79,14 @@ void updateProduct(void) {
     }
 
     printf("Current -> %s | %.2f | %d\n", products[index].name, products[index].price, products[index].quantity);
-    printf("Enter new price: ");
-    scanf("%f", &products[index].price);
-    printf("Enter new quantity: ");
-    scanf("%d", &products[index].quantity);
+    if (!readNonNegativeFloat("Enter new price: ", &products[index].price)) return;
+    if (!readNonNegativeInt("Enter new quantity: ", &products[index].quantity)) return;
     printf("Product updated successfully.\n");
 }
 
 void deleteProduct(void) {
     int id;
-    printf("Enter product id to delete: ");
-    scanf("%d", &id);
+    if (!readPositiveInt("Enter product id to delete: ", &id)) return;
 
     int index = searchProductIndexById(id);
     if (index == -1) {
@@ -170,7 +162,7 @@ void totalInventoryValue(void) {
 }
 
 void productMenu(void) {
-    int choice;
+    int choice = -1;
     do {
         printf("\n=== Product Inventory (Array) ===\n");
         printf("1. Add product\n");
@@ -182,8 +174,7 @@ void productMenu(void) {
         printf("7. Total items in stock\n");
         printf("8. Total inventory value\n");
         printf("0. Back\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (!readInt("Enter choice: ", &choice)) continue;
 
         switch (choice) {
             case 1: addProduct(); break;

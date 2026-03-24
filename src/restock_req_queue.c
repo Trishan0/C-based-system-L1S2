@@ -2,6 +2,7 @@
 #include <string.h>
 #include "types.h"
 #include "restock_req_queue.h"
+#include "input_utils.h"
 
 static RestockQueue restockQueue;
 
@@ -29,12 +30,9 @@ void enqueueRestockRequest(void) {
     }
 
     RestockRequest r;
-    printf("Enter product id: ");
-    scanf("%d", &r.productId);
-    printf("Enter product name: ");
-    scanf(" %49[^\n]", r.productName);
-    printf("Enter requested quantity: ");
-    scanf("%d", &r.requestedQty);
+    if (!readPositiveInt("Enter product id: ", &r.productId)) return;
+    if (!readLine("Enter product name: ", r.productName, sizeof(r.productName))) return;
+    if (!readPositiveInt("Enter requested quantity: ", &r.requestedQty)) return;
 
     restockQueue.rear++;
     restockQueue.items[restockQueue.rear] = r;
@@ -100,8 +98,7 @@ void searchRestockRequest(void) {
     }
 
     int productId;
-    printf("Enter product id to search: ");
-    scanf("%d", &productId);
+    if (!readPositiveInt("Enter product id to search: ", &productId)) return;
 
     for (int i = restockQueue.front; i <= restockQueue.rear; i++) {
         if (restockQueue.items[i].productId == productId) {
@@ -142,7 +139,7 @@ void totalRequestedQuantity(void) {
 }
 
 void restockQueueMenu(void) {
-    int choice;
+    int choice = -1;
     do {
         printf("\n=== Restocking Request Management (Queue) ===\n");
         printf("1. Enqueue restock request\n");
@@ -153,8 +150,7 @@ void restockQueueMenu(void) {
         printf("6. Count pending requests\n");
         printf("7. Total requested quantity\n");
         printf("0. Back\n");
-        printf("Enter choice: ");
-        scanf("%d", &choice);
+        if (!readInt("Enter choice: ", &choice)) continue;
 
         switch (choice) {
             case 1: enqueueRestockRequest(); break;
